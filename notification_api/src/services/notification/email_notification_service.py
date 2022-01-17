@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from core.settings.core_settings import get_settings
+# from core.settings.core_settings import get_settings
 from core.settings.notification_settings import EmailNotificationSettings
 from models.notification import Notification
 from services.notification.base_notification_service import BaseNotificationService
@@ -29,6 +29,6 @@ class EmailNotificationService(BaseNotificationService):
         return True
 
 
-email_notification_service = EmailNotificationService(
-    email_notification_settings=get_settings().notification_settings.email_settings
-)
+# email_notification_service = EmailNotificationService(
+#     email_notification_settings=get_settings().notification_settings.email_settings
+# )

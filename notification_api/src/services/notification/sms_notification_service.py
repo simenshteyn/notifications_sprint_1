@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from core.settings.core_settings import get_settings
+# from core.settings.core_settings import get_settings
 from core.settings.notification_settings import SMSNotificationSettings
 from models.notification import Notification
 from services.notification.base_notification_service import BaseNotificationService
@@ -29,6 +29,6 @@ class SMSNotificationService(BaseNotificationService):
         return True
 
 
-sms_notification_service = SMSNotificationService(
-    sms_notification_settings=get_settings().notification_settings.sms_settings
-)
+# sms_notification_service = SMSNotificationService(
+#     sms_notification_settings=get_settings().notification_settings.sms_settings
+# )

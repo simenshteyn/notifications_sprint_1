@@ -1,7 +1,7 @@
 from typing import Any
 from uuid import UUID
 
-from core.settings.core_settings import get_settings
+# from core.settings.core_settings import get_settings
 from core.settings.user_service_settings import AuthUserSettings
 from models.user import User
 from services.user.base_user_service import BaseUserService
@@ -18,6 +18,6 @@ class AuthUserService(BaseUserService):
         pass
 
 
-auth_user_service = AuthUserService(
-    auth_user_settings=get_settings().user_services_settings.auth_user_settings
-)
+# auth_user_service = AuthUserService(
+#     auth_user_settings=get_settings().user_services_settings.auth_user_settings
+# )

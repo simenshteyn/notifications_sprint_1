@@ -25,4 +25,4 @@ class DebugNotificationService(BaseNotificationService):
         return True
 
 
-debug_notification_service = DebugNotificationService()
+# debug_notification_service = DebugNotificationService()
