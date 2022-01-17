@@ -6,7 +6,7 @@ from fastapi.responses import ORJSONResponse
 
 from api.v1.notification_endpoints import notifications_router
 from core.logger import LOGGING
-from core.settings import get_settings
+from core.settings.core_settings import get_settings
 
 app = FastAPI(
     docs_url="/api/openapi",
