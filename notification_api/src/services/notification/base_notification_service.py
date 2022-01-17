@@ -5,7 +5,7 @@ from models.notification import Notification
 
 class BaseNotificationService(ABC):
     @abstractmethod
-    def send_notification(self, notification: Notification):
+    def send_notification(self, notification: Notification) -> bool:
         pass
 
     @abstractmethod
@@ -13,5 +13,5 @@ class BaseNotificationService(ABC):
         self,
         notifications: list[Notification] | tuple[Notification],
         notification_body: str | None = None,
-    ):
+    ) -> bool:
         pass
