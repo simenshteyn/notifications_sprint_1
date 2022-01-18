@@ -1,5 +1,3 @@
-from abc import ABC, abstractmethod
-
 from models.notification import Notification
 from services.notification.base_notification_service import BaseNotificationService
 

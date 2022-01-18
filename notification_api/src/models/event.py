@@ -1,8 +1,9 @@
 from enum import Enum
 from uuid import UUID
 
-from core.settings.core_settings import get_settings
 from pydantic import BaseModel
+
+from core.settings.core_settings import get_settings
 
 
 class DeliveryType(str, Enum):

@@ -11,7 +11,7 @@ class AuthUserService(BaseUserService):
     def __init__(self, auth_user_settings: AuthUserSettings, *args, **kwargs):
         pass
 
-    def get_private_user_data(self, user_id: UUID) -> dict[str, Any]:
+    def get_private_user_data(self, user_id: UUID) -> dict[str, Any] | None:
         pass
 
     def get_batch_private_users_data(self, users_ids: list[UUID]) -> tuple[User] | None:

@@ -1,9 +1,22 @@
 from functools import lru_cache
 
-from core.settings.notification_settings import NotificationSettings, get_notification_settings
-from core.settings.user_service_settings import UserSettings, get_user_services_settings
 from pydantic import BaseSettings, Field
-from services.user import AuthUserService, BaseUserService, DBUserService, DebugUserService
+
+from core.settings.notification_settings import (
+    NotificationSettings,
+    get_notification_settings,
+)
+from core.settings.template_settings import (
+    TemplateServiceSettings,
+    get_template_settings,
+)
+from core.settings.user_service_settings import UserSettings, get_user_services_settings
+from services.user import (
+    AuthUserService,
+    BaseUserService,
+    DBUserService,
+    DebugUserService,
+)
 
 USER_SERVICES = {"AUTH_USER_SERVICE": AuthUserService, "DB_USER_SERVICE": DBUserService}
 
@@ -25,12 +38,10 @@ class Settings(BaseSettings):
     app = AppSettings()
     notification_settings: NotificationSettings = get_notification_settings()
     user_services_settings: UserSettings = get_user_services_settings()
+    template_services_settings: TemplateServiceSettings = get_template_settings()
 
 
 @lru_cache
 def get_settings() -> Settings:
     settings = Settings()
-    settings.app.user_service = (
-        USER_SERVICES[settings.app.user_service_name] if not settings.app.is_debug else DebugUserService
-    )
     return settings
