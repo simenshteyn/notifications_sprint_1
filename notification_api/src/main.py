@@ -7,7 +7,8 @@ from fastapi.responses import ORJSONResponse
 from api.v1.notification_endpoints import notifications_router
 from core.logger import LOGGING
 from core.settings.core_settings import get_settings
-from dependencies import user_storage_dependencies
+from dependencies import notifications_dependencies, user_storage_dependencies
+from services.notification import EmailNotificationService, SMSNotificationService
 
 app_settings = get_settings()
 
@@ -26,14 +27,31 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup_event():
-    user_storage_dependencies.user_service = app_settings.app.user_service
+    # загрузка службы получения персональных данных согласно конфига
+    user_storage_dependencies.user_service = user_storage_dependencies.set_user_service(
+        service_name=app_settings.app.user_service_name,
+        services_settings=app_settings.user_services_settings,
+    )
 
     logger.debug(user_storage_dependencies.get_user_service())
 
+    notifications_dependencies.notification_services["sms"] = SMSNotificationService(
+        sms_notification_settings=app_settings.notification_settings.sms_settings
+    )
 
-app.include_router(
-    notifications_router, prefix="/api/v1", tags=["Notifications service"]
-)
+    notifications_dependencies.notification_services["email"] = EmailNotificationService(
+        email_notification_settings=app_settings.notification_settings.email_settings
+    )
+
+    # подгрузка службы DebugNotificationService для тестирования
+    if app_settings.app.is_debug:
+        from services.notification import DebugNotificationService
+
+        notifications_dependencies.notification_services["debug"] = DebugNotificationService()
+    logger.debug(notifications_dependencies.notification_services)
+
+
+app.include_router(notifications_router, prefix="/api/v1", tags=["Notifications service"])
 
 if __name__ == "__main__":
 
