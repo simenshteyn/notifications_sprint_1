@@ -1,10 +1,12 @@
 import logging
 from http import HTTPStatus
 
+from dependencies.notifications_dependencies import get_email_notification_services
 from dependencies.user_storage_dependencies import get_user_service
 from fastapi import APIRouter, Depends
 from models.event import Event
 from models.user import User
+from services.notification import BaseNotificationService
 from services.user import BaseUserService
 
 logger = logging.getLogger("notification_api")
@@ -12,13 +14,16 @@ logger = logging.getLogger("notification_api")
 notifications_router = APIRouter()
 
 
-@notifications_router.post(
-    "/send", summary="Single notification edpoint", status_code=HTTPStatus.ACCEPTED
-)
+@notifications_router.post("/send", summary="Single notification edpoint", status_code=HTTPStatus.ACCEPTED)
 async def send_one(
-    event: Event, user_service: BaseUserService = Depends(get_user_service)
+    event: Event,
+    user_service: BaseUserService = Depends(get_user_service),
+    notification_services: dict[str, BaseNotificationService] = Depends(get_email_notification_services),
 ):
     """Endpoint for single user notification"""
+
+    logger.debug(event)
+
     user: User = user_service.get_private_user_data(user_id=event.user_id)
     logger.debug(user)
     return {}
@@ -31,8 +36,8 @@ async def send_one(
 )
 async def send_batch(
     events: list[Event],
-    status_code=HTTPStatus.ACCEPTED,
     user_service: BaseUserService = Depends(get_user_service),
+    notification_services: dict[str, BaseNotificationService] = Depends(get_email_notification_services),
 ):
     """Endpoint for batch users notifications"""
     users: list[User] = user_service.get_batch_private_users_data(

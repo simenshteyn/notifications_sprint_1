@@ -19,4 +19,3 @@ class Event(BaseModel):
     delivery_type: DeliveryType
     event_type: str | None
     template_id: str | None
-    specific_func: str | None

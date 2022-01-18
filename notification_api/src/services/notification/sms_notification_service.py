@@ -7,9 +7,7 @@ from services.notification.base_notification_service import BaseNotificationServ
 
 
 class SMSNotificationService(BaseNotificationService):
-    def __init__(
-        self, sms_notification_settings: SMSNotificationSettings, *args, **kwargs
-    ):
+    def __init__(self, sms_notification_settings: SMSNotificationSettings, *args, **kwargs):
         pass
 
     def send_notification(self, notification: Notification) -> bool:

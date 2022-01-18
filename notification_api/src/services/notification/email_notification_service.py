@@ -7,9 +7,7 @@ from services.notification.base_notification_service import BaseNotificationServ
 
 
 class EmailNotificationService(BaseNotificationService):
-    def __init__(
-        self, email_notification_settings: EmailNotificationSettings, *args, **kwargs
-    ):
+    def __init__(self, email_notification_settings: EmailNotificationSettings, *args, **kwargs):
         self.email_notification_settings = email_notification_settings
 
     def send_notification(self, notification: Notification) -> bool:
