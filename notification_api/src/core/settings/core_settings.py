@@ -11,14 +11,7 @@ from core.settings.template_settings import (
     get_template_settings,
 )
 from core.settings.user_service_settings import UserSettings, get_user_services_settings
-from services.user import (
-    AuthUserService,
-    BaseUserService,
-    DBUserService,
-    DebugUserService,
-)
-
-USER_SERVICES = {"AUTH_USER_SERVICE": AuthUserService, "DB_USER_SERVICE": DBUserService}
+from services.user import AuthUserService, BaseUserService, DebugUserService
 
 
 class AppSettings(BaseSettings):
