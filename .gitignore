@@ -62,3 +62,4 @@ staticfiles/
 .DS_Store
 tmp/
 .python-version
+poetry.lock
