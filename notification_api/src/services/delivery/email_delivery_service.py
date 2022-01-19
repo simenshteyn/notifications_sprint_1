@@ -14,11 +14,7 @@ logger = logging.getLogger("notification_api")
 
 class EmailDeliveryService(BaseDeliveryService):
     def __init__(
-        self,
-        email_notification_settings: EmailDeliverySettings,
-        event_loop: asyncio.AbstractEventLoop,
-        *args,
-        **kwargs,
+        self, *, email_notification_settings: EmailDeliverySettings, event_loop: asyncio.AbstractEventLoop
     ):
         self.email_notification_settings = email_notification_settings
         logger.debug("EmailNotificationService loaded with settings:")
@@ -36,7 +32,7 @@ class EmailDeliveryService(BaseDeliveryService):
         await smtp_client.send_message(message)
         await smtp_client.quit()
 
-    def send_notification(self, notification: Notification) -> bool:
+    def send_notification(self, *, notification: Notification) -> bool:
         mime_message = MIMEText(notification.notification_body)
         mime_message["From"] = self.email_notification_settings.smtp_user
         mime_message["To"] = notification.destanation
@@ -47,11 +43,7 @@ class EmailDeliveryService(BaseDeliveryService):
         except SMTPException as ex:
             return False
 
-    def send_notifications(
-        self,
-        notifications: list[Notification] | tuple[Notification],
-        notification_body: str | None = None,
-    ) -> bool:
+    def send_notifications(self, *, notifications: list[Notification] | tuple[Notification]) -> bool:
         results = []
         for notification in notifications:
             results.append(self.send_notification(notification=notification))

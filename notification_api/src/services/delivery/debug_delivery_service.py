@@ -6,7 +6,7 @@ class DebugDeliveryService(BaseDeliveryService):
     def __init__(self, *args, **kwargs):
         pass
 
-    def send_notification(self, notification: Notification) -> bool:
+    def send_notification(self, *, notification: Notification) -> bool:
         print("Sending.......")
         print(notification)
         print("Notification has been sent")
@@ -14,6 +14,7 @@ class DebugDeliveryService(BaseDeliveryService):
 
     def send_notifications(
         self,
+        *,
         notifications: list[Notification] | tuple[Notification],
         notification_body: str | None = None,
     ) -> bool:
