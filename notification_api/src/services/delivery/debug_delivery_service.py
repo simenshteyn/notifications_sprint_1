@@ -1,8 +1,8 @@
 from models.notification import Notification
-from services.notification.base_notification_service import BaseNotificationService
+from services.delivery.base_delivery_service import BaseDeliveryService
 
 
-class DebugNotificationService(BaseNotificationService):
+class DebugDeliveryService(BaseDeliveryService):
     def __init__(self, *args, **kwargs):
         pass
 
@@ -21,6 +21,3 @@ class DebugNotificationService(BaseNotificationService):
         print(notifications)
         print("Notification has been sent")
         return True
-
-
-# debug_notification_service = DebugNotificationService()

@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 import uvicorn
@@ -8,14 +9,16 @@ from api.v1.notification_endpoints import notifications_router
 from core.logger import LOGGING
 from core.settings.core_settings import get_settings
 from dependencies import (
-    notifications_dependencies,
+    delivery_dependencies,
     template_dependencies,
     user_storage_dependencies,
 )
-from services.notification import EmailNotificationService, SMSNotificationService
+from services.delivery import EmailDeliveryService
 from services.template.endpoint_template_service import EndpointTemplateService
 
 app_settings = get_settings()
+
+event_loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
 
 logger = logging.getLogger("notification_api")
 logger.setLevel(logging.INFO if not app_settings.app.is_debug else logging.DEBUG)
@@ -35,7 +38,6 @@ app = FastAPI(
 @app.on_event("startup")
 async def startup_event():
     # подключение службы получения персональных данных согласно конфига
-    print(app_settings.app.user_service_name)
     user_storage_dependencies.user_service = user_storage_dependencies.set_user_service(
         service_name=app_settings.app.user_service_name,
         services_settings=app_settings.user_services_settings,
@@ -43,19 +45,16 @@ async def startup_event():
     logger.debug(user_storage_dependencies.get_user_service())
 
     # подключение служб отправки уведомлений согласно конфига
-    notifications_dependencies.notification_services["sms"] = SMSNotificationService(
-        sms_notification_settings=app_settings.notification_settings.sms_settings
-    )
-    notifications_dependencies.notification_services["email"] = EmailNotificationService(
-        email_notification_settings=app_settings.notification_settings.email_settings
+    delivery_dependencies.delivery_services["email"] = EmailDeliveryService(
+        email_notification_settings=app_settings.delivery_settings.email_settings, event_loop=event_loop
     )
 
-    # подгрузка службы DebugNotificationService для тестирования
+    # подгрузка службы для тестирования
     if app_settings.app.is_debug:
-        from services.notification import DebugNotificationService
+        from services.delivery import DebugDeliveryService
 
-        notifications_dependencies.notification_services["debug"] = DebugNotificationService()
-    logger.debug(notifications_dependencies.notification_services)
+        delivery_dependencies.delivery_services["debug"] = DebugDeliveryService()
+    logger.debug(delivery_dependencies.delivery_services)
 
     # подгрузка службы работы с шаблонами
     template_dependencies.end_point_template_service = EndpointTemplateService(

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from models.notification import Notification
 
 
-class BaseNotificationService(ABC):
+class BaseDeliveryService(ABC):
     @abstractmethod
     def send_notification(self, notification: Notification) -> bool:
         pass

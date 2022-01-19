@@ -2,10 +2,7 @@ from functools import lru_cache
 
 from pydantic import BaseSettings, Field
 
-from core.settings.notification_settings import (
-    NotificationSettings,
-    get_notification_settings,
-)
+from core.settings.delivery_settings import DeliverySettings, get_delivery_settings
 from core.settings.template_settings import (
     TemplateServiceSettings,
     get_template_settings,
@@ -29,7 +26,7 @@ class AppSettings(BaseSettings):
 
 class Settings(BaseSettings):
     app = AppSettings()
-    notification_settings: NotificationSettings = get_notification_settings()
+    delivery_settings: DeliverySettings = get_delivery_settings()
     user_services_settings: UserSettings = get_user_services_settings()
     template_services_settings: TemplateServiceSettings = get_template_settings()
 
