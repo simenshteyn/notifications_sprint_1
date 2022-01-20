@@ -8,7 +8,6 @@ from core.settings.core_settings import get_settings
 
 class DeliveryType(str, Enum):
     "Delivery types variants"
-    sms = "sms"
     email = "email"
     if get_settings().app.is_debug:
         debug = "debug"
@@ -16,7 +15,9 @@ class DeliveryType(str, Enum):
 
 class Event(BaseModel):
     "Event for sending notification"
+    event_id: UUID
     user_id: UUID
     delivery_type: DeliveryType
     event_type: str | None
     template_id: str | None
+    subject: str | None

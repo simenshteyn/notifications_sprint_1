@@ -12,18 +12,25 @@ from services.template.base_template_service import BaseTemplateService
 
 
 class NotificationService(BaseNotificationService):
-    def __init__(self, *, template_service: BaseTemplateService) -> None:
-        self.template_service = template_service
+    def __init__(self, *args, **kwargs) -> None:
+        self.template_service = kwargs["template_service"]
+        self.logger = kwargs["logger"]
 
-    def get_notification(self, *, event: Event) -> Notification | None:
-        pass
+    async def get_notification(self, *, user: User, event: Event) -> Notification | None:
+        self.logger.debug(user)
+        self.logger.debug(event)
 
-    def get_notifications(self, *, events: list[Event]) -> tuple[Notification] | None:
-        pass
+        destanation = user.email
 
-
-@lru_cache()
-def get_notification_service(
-    template_service: BaseTemplateService = Depends(get_end_point_template_service),
-) -> NotificationService:
-    return NotificationService(template_service=template_service)
+        notification_body = await self.template_service.get_message_body(
+            template_id=event.template_id, user=user
+        )
+        notification_body = "notification_body"
+        notification: Notification = Notification(
+            user_name=user.user_name,
+            user_last_name=user.user_last_name,
+            notification_body=notification_body,
+            subject=event.subject,
+            destanation=user.email,
+        )
+        return notification

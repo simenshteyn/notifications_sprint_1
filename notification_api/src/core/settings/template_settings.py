@@ -4,7 +4,7 @@ from pydantic import BaseSettings, Field
 
 
 class EndpointTemplateServiceSettings(BaseSettings):
-    endpoint: str = Field("localhost:8001/get_template", env="TEMPLATE_ENDPOINT")
+    endpoint: str = Field("http://localhost:8001/get_template", env="TEMPLATE_ENDPOINT")
 
 
 class TemplateServiceSettings(BaseSettings):

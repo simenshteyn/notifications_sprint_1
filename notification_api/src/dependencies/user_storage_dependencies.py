@@ -7,7 +7,7 @@ user_service: BaseUserService | None = None
 
 def set_user_service(service_name: str, services_settings: UserSettings) -> BaseUserService:
     if service_name == "AUTH_USER_SERVICE":
-        return AuthUserService(services_settings.auth_user_settings)
+        return AuthUserService(auth_user_settings=services_settings.auth_user_settings)
 
     elif service_name == "DEBUG_USER_SERVICE":
         if get_settings().app.is_debug:

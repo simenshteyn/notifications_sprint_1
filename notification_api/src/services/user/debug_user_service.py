@@ -35,9 +35,3 @@ class DebugUserService(BaseUserService):
 
     def get_private_user_data(self, *, user_id: uuid.UUID) -> User:
         return self.debug_user
-
-    def get_batch_private_users_data(self, *, users_ids: list[uuid.UUID]) -> tuple[User]:
-        return self.debug_users
-
-
-debug_user_service = DebugUserService()

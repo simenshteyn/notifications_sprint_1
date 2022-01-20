@@ -11,14 +11,3 @@ class DebugDeliveryService(BaseDeliveryService):
         print(notification)
         print("Notification has been sent")
         return True
-
-    def send_notifications(
-        self,
-        *,
-        notifications: list[Notification] | tuple[Notification],
-        notification_body: str | None = None,
-    ) -> bool:
-        print("Sending.......")
-        print(notifications)
-        print("Notification has been sent")
-        return True

@@ -9,8 +9,4 @@ from models.user import User
 class BaseUserService(ABC):
     @abstractmethod
     def get_private_user_data(self, *, user_id: UUID) -> User | None:
-        pass
-
-    @abstractmethod
-    def get_batch_private_users_data(self, *, users_ids: list[UUID]) -> tuple[User] | None:
-        pass
+        raise NotImplemented

@@ -1,15 +1,16 @@
 import logging
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from dependencies.delivery_dependencies import get_delivery_services
-from dependencies.template_dependencies import get_end_point_template_service
+from dependencies.notification_dependecies import get_notification_service
 from dependencies.user_storage_dependencies import get_user_service
 from models.event import Event
+from models.notification import Notification
 from models.user import User
 from services.delivery import BaseDeliveryService
-from services.template.endpoint_template_service import EndpointTemplateService
+from services.notification.base_notification_service import BaseNotificationService
 from services.user import BaseUserService
 
 logger = logging.getLogger("notification_api")
@@ -22,7 +23,7 @@ async def send_one(
     event: Event,
     user_service: BaseUserService = Depends(get_user_service),
     delivery_services: dict[str, BaseDeliveryService] = Depends(get_delivery_services),
-    end_point_template_service: EndpointTemplateService = Depends(get_end_point_template_service),
+    notification_service: BaseNotificationService = Depends(get_notification_service),
 ):
     """Endpoint for single user notification"""
 
@@ -30,24 +31,19 @@ async def send_one(
 
     user: User = user_service.get_private_user_data(user_id=event.user_id)
     logger.debug(user)
-    logger.debug(delivery_services[event.delivery_type])
-    return {}
+    if user is None:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail={"error": "couldn't find user"})
+    notification: Notification | None = await notification_service.get_notification(event=event, user=user)
+    logger.debug(notification)
+    if notification is None:
+        raise HTTPException(
+            status_code=HTTPStatus.EXPECTATION_FAILED, detail={"error": "couldn't create notification"}
+        )
 
+    result = await delivery_services[event.delivery_type].send_notification(notification=notification)
+    if not result:
+        raise HTTPException(
+            status_code=HTTPStatus.EXPECTATION_FAILED, detail={"error": "couldn't sent notification"}
+        )
 
-@notifications_router.post(
-    "/send_batch",
-    summary="Batch notifications edpoint",
-    status_code=HTTPStatus.ACCEPTED,
-)
-async def send_batch(
-    events: list[Event],
-    user_service: BaseUserService = Depends(get_user_service),
-    delivery_services: dict[str, BaseDeliveryService] = Depends(get_delivery_services),
-    end_point_template_service: EndpointTemplateService = Depends(get_end_point_template_service),
-):
-    """Endpoint for batch users notifications"""
-    users: list[User] = user_service.get_batch_private_users_data(
-        users_ids=(event.user_id for event in events)
-    )
-    logger.debug(users)
-    return {}
+    return {"result": f"event {event.event_id} has been sended"}

@@ -15,11 +15,11 @@ class AppSettings(BaseSettings):
 
     host: str = Field("0.0.0.0", env="HOST")
     port: int = Field(8000, env="PORT")
-    is_debug: bool = Field(True, env="DEBUG")
+    is_debug: bool = Field(False, env="DEBUG")
     should_reload: bool = Field(True, env="SHOULD_RELOAD")
-    # user_service_name: str = Field("AUTH_USER_SERVICE", env="USER_SERVICE")
+    user_service_name: str = Field("AUTH_USER_SERVICE", env="USER_SERVICE")
     # TODO remove after debug
-    user_service_name: str = Field("DEBUG_USER_SERVICE", env="USER_SERVICE")
+    # user_service_name: str = Field("DEBUG_USER_SERVICE", env="USER_SERVICE")
 
     user_service: BaseUserService | None
 

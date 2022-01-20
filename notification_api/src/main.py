@@ -10,10 +10,12 @@ from core.logger import LOGGING
 from core.settings.core_settings import get_settings
 from dependencies import (
     delivery_dependencies,
+    notification_dependecies,
     template_dependencies,
     user_storage_dependencies,
 )
 from services.delivery import EmailDeliveryService
+from services.notification.notification_service import NotificationService
 from services.template.endpoint_template_service import EndpointTemplateService
 
 app_settings = get_settings()
@@ -22,7 +24,7 @@ event_loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
 
 logger = logging.getLogger("notification_api")
 logger.setLevel(logging.INFO if not app_settings.app.is_debug else logging.DEBUG)
-logger.setLevel(logging.DEBUG)
+# logger.setLevel(logging.DEBUG)
 
 
 app = FastAPI(
@@ -62,6 +64,11 @@ async def startup_event():
     )
 
     logger.debug(template_dependencies.end_point_template_service)
+
+    notification_dependecies.notification_service = notification_dependecies.set_notification_service(
+        NotificationService, template_service=template_dependencies.end_point_template_service, logger=logger
+    )
+    logger.debug(notification_dependecies.notification_service)
 
 
 app.include_router(notifications_router, prefix="/api/v1", tags=["Notifications service"])

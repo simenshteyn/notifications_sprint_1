@@ -13,9 +13,5 @@ class BaseNotificationService(ABC):
         pass
 
     @abstractmethod
-    def get_notification(self, *, event: Event) -> Notification | None:
-        pass
-
-    @abstractmethod
-    def get_notifications(self, *, events: list[Event]) -> tuple[Notification] | None:
-        pass
+    def get_notification(self, *, user: User, event: Event) -> Notification | None:
+        raise NotImplemented
