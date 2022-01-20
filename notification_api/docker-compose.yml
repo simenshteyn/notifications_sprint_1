@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+
+  cs_fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notification_api
+    restart: always
+    env_file:
+      - src/.env
+    expose:
+      - ${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+    logging:
+      options:
+        max-size: 50m
