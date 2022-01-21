@@ -1,0 +1,46 @@
+name: CodeStyle
+on: [ pull_request ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"] #["3.9", "3.10"]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black mypy isort flake8
+    
+    - name: black
+      run: black --line-length 110 --target-version py310 --check .
+
+    - name: isort
+      run: isort --check .
+    
+    - name: flake8
+      run: flake8 --config=setup.cfg
+
+    - name: mypy_notification_api
+      run: mypy notification_api 
+    
+    # - name: mypy_etl
+    #   run: mypy etl
+
+    - name: send custom message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          Python ${{ matrix.python-version }}
+          ${{ github.actor }} created commit:
+          Commit message: ${{ github.event.commits[0].message }}
+          Repository: ${{ github.repository }}
+          See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
