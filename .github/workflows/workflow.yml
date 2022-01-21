@@ -22,7 +22,8 @@ jobs:
       run: black --line-length 110 --target-version py310 --check .
 
     - name: isort
-      run: isort --check .
+      run: 
+        isort --check notification_api
     
     - name: flake8
       run: flake8 --config=setup.cfg
