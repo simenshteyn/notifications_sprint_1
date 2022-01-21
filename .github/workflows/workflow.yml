@@ -25,9 +25,6 @@ jobs:
       run: 
         isort --check notification_api
     
-    - name: flake8
-      run: flake8 --config=setup.cfg
-
     - name: mypy_notification_api
       run: mypy notification_api 
     
