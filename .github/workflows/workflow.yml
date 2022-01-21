@@ -26,10 +26,8 @@ jobs:
         isort --check notification_api
     
     - name: mypy_notification_api
-      run: mypy notification_api 
+      run: mypy --ignore-missing-imports notification_api 
     
-    # - name: mypy_etl
-    #   run: mypy etl
 
     - name: send custom message
       uses: appleboy/telegram-action@master
