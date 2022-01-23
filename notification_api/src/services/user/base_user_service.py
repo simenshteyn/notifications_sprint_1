@@ -8,5 +8,5 @@ from models.user import User
 
 class BaseUserService(ABC):
     @abstractmethod
-    def get_private_user_data(self, *, user_id: UUID) -> User | None:
+    async def get_private_user_data(self, *, user_id: UUID) -> User | None:
         raise NotImplemented

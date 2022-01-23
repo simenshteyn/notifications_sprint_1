@@ -29,7 +29,7 @@ async def send_one(
 
     logger.debug(event)
 
-    user: User = user_service.get_private_user_data(user_id=event.user_id)
+    user: User = await user_service.get_private_user_data(user_id=event.user_id)
     logger.debug(user)
     if user is None:
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail={"error": "couldn't find user"})

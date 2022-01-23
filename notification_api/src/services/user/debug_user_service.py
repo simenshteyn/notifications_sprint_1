@@ -1,5 +1,6 @@
 import uuid
 from datetime import date
+from http import HTTPStatus
 from typing import Any
 
 from models.user import User
@@ -33,5 +34,5 @@ class DebugUserService(BaseUserService):
         self.debug_user = debug_user1
         self.debug_users = list[debug_user1, debug_user2]
 
-    def get_private_user_data(self, *, user_id: uuid.UUID) -> User:
+    async def get_private_user_data(self, *, user_id: uuid.UUID) -> User:
         return self.debug_user
