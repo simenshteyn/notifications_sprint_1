@@ -6,7 +6,7 @@ class DebugDeliveryService(BaseDeliveryService):
     def __init__(self, *args, **kwargs):
         pass
 
-    def send_notification(self, *, notification: Notification) -> bool:
+    async def send_notification(self, *, notification: Notification) -> bool:
         print("Sending.......")
         print(notification)
         print("Notification has been sent")
