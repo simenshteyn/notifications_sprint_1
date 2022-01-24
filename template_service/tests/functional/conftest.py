@@ -29,7 +29,7 @@ async def session():
 @pytest.fixture(scope="session")
 def make_get_request(session):
     async def inner(
-        method: str, params: dict = None, headers: dict = None
+            method: str, params: dict = None, headers: dict = None
     ) -> HTTPResponse:
         params = params or {}
         headers = headers or {}
@@ -53,7 +53,7 @@ def make_get_request(session):
 @pytest.fixture(scope="session")
 def make_post_request(session):
     async def inner(
-        method: str, json: dict = None, headers: dict = None
+            method: str, json: dict = None, headers: dict = None
     ) -> HTTPResponse:
         json = json or {}
         headers = headers or {}
@@ -77,8 +77,8 @@ def make_post_request(session):
 @pytest.fixture(scope="session")
 def make_delete_request(session):
     async def inner(
-        method: str, params: dict = None,
-        json: dict = None, headers: dict = None
+            method: str, params: dict = None,
+            json: dict = None, headers: dict = None
     ) -> HTTPResponse:
         params = params or {}
         headers = headers or {}
@@ -91,13 +91,42 @@ def make_delete_request(session):
             method=method,
         )
         async with session.delete(
-            url, params=params, json=json, headers=headers
+                url, params=params, json=json, headers=headers
         ) as response:
             return HTTPResponse(
                 body=await response.json(),
                 headers=response.headers,
                 status=response.status,
             )
+
+    return inner
+
+
+@pytest.fixture(scope="session")
+def make_patch_request(session):
+    async def inner(
+            method: str, params: dict = None,
+            json: dict = None, headers: dict = None
+    ) -> HTTPResponse:
+        params = params or {}
+        headers = headers or {}
+        json = json or {}
+        url = "{protocol}://{host}:{port}/api/v{api_version}/{method}".format(
+            protocol=config.service_protocol,
+            host=config.service_host,
+            port=config.service_port,
+            api_version=config.service_api_version,
+            method=method,
+        )
+        async with session.patch(
+                url, params=params, json=json, headers=headers
+        ) as response:
+            return HTTPResponse(
+                body=await response.json(),
+                headers=response.headers,
+                status=response.status,
+            )
+
     return inner
 
 
