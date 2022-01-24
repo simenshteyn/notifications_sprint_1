@@ -4,10 +4,24 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 
 from models.template import (Templates, TemplatesCreate, TemplatesRead,
-                             TemplatesUpdate)
+                             TemplatesShort, TemplatesUpdate)
 from services.template import TemplateService, get_template_service
 
 router = APIRouter()
+
+
+@router.get('/', response_model=list[TemplatesShort],
+            response_model_exclude_unset=True)
+async def get_templates(
+        limit: int = 50,
+        offset: int = 0,
+        template_service: TemplateService = Depends(get_template_service)
+) -> list[Templates]:
+    result = await template_service.get_template_list(limit=limit,
+                                                      offset=offset)
+    if not result:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND)
+    return result
 
 
 @router.get('/{template_id}',
@@ -31,6 +45,7 @@ async def add_template(
     result = await template_service.add_template(
         name=template.name,
         content=template.content,
+        subject=template.subject,
     )
     if not result:
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
@@ -47,6 +62,7 @@ async def edit_template(
         template_id=template.id,
         name=template.name,
         content=template.content,
+        subject=template.subject,
     )
     if not result:
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)

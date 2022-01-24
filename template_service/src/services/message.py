@@ -9,6 +9,7 @@ from sqlmodel import Session
 from db.orm import get_engine
 from models.message import MessageCustom, MessageRead
 from models.template import Templates
+from models.user import User
 from services.extractor import ExtractorService
 
 
@@ -25,17 +26,21 @@ class MessageService:
             extractor: ExtractorService,
     ) -> MessageRead:
         """Render message for user with template."""
-        user = await extractor.get_user_data(user_id=user_id)
+        user: User = await extractor.get_user_data(user_id=user_id)
         with Session(self.engine) as session:
             template = session.get(Templates, template_id)
             if template:
                 text = Template(template.content)
+                subject = template.subject
+                if subject:
+                    subject = Template(subject).substitute(user.dict())
                 try:
                     msg = text.substitute(user.dict())
                     return MessageRead(template_id=template_id,
-                                       user_id=user_id,
+                                       user=user,
+                                       subject=subject,
                                        message=msg)
-                except Exception as e:
+                except Exception:
                     return None
             return template
 
@@ -51,7 +56,7 @@ class MessageService:
                     return MessageCustom(template_id=template_id,
                                          payload=payload,
                                          message=msg)
-                except Exception as e:
+                except Exception:
                     return None
             return template
 

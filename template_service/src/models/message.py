@@ -3,6 +3,8 @@ from uuid import UUID
 import orjson
 from pydantic import BaseModel
 
+from models.user import User
+
 
 def orjson_dumps(v, *, default):
     return orjson.dumps(v, default=default).decode()
@@ -16,7 +18,8 @@ class Orjson(BaseModel):
 
 class MessageRead(Orjson):
     template_id: UUID
-    user_id: UUID
+    user: User
+    subject: str | None
     message: str
 
 

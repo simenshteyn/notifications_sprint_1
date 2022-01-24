@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import Depends
 from sqlalchemy.engine import Engine
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from db.orm import get_engine
 from models.template import Templates
@@ -15,15 +15,25 @@ class TemplateService:
     def __init__(self, engine: Engine):
         self.engine = engine
 
+    async def get_template_list(
+            self, limit: int, offset: int) -> list[Templates]:
+        """Get template list with limit and offset."""
+        with Session(self.engine) as session:
+            statement = select(Templates).offset(offset).limit(limit)
+            results = session.exec(statement)
+            templates = results.all()
+            return templates
+
     async def get_template_by_id(self, template_id: UUID) -> Templates:
         """Get template by ID"""
         with Session(self.engine) as session:
             template = session.get(Templates, template_id)
             return template
 
-    async def add_template(self, name: str, content: str) -> Templates:
-        """Add new template to storage with template name and content."""
-        template = Templates(name=name, content=content)
+    async def add_template(
+            self, name: str, content: str, subject: str) -> Templates:
+        """Add new template to storage with template name, content, subject."""
+        template = Templates(name=name, content=content, subject=subject)
         with Session(self.engine) as session:
             session.add(template)
             session.commit()
@@ -31,13 +41,15 @@ class TemplateService:
         return template
 
     async def edit_template(
-            self, template_id: UUID, name: str, content: str) -> Templates:
-        """Update template by id with new name or content"""
+            self, template_id: UUID, name: str, content: str, subject: str
+    ) -> Templates:
+        """Update template by id with new name, content or subject."""
         with Session(self.engine) as session:
             template = session.get(Templates, template_id)
             if template:
                 template.name = name
                 template.content = content
+                template.subject = subject
                 session.add(template)
                 session.commit()
                 session.refresh(template)
