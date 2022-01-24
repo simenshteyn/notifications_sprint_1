@@ -31,7 +31,7 @@ app = FastAPI(
     docs_url="/api/openapi",
     openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
-    title="Post-only Notification API для онлайн-кинотеатра",
+    title="Post-only Delivery API для онлайн-кинотеатра",
     description="Служба нотификации",
     version="0.1.0",
 )
