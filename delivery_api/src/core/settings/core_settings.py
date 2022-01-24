@@ -3,16 +3,13 @@ from functools import lru_cache
 from pydantic import BaseSettings, Field
 
 from core.settings.delivery_settings import DeliverySettings, get_delivery_settings
-from core.settings.template_settings import (
-    TemplateServiceSettings,
-    get_template_settings,
+from core.settings.message_api_settings import (
+    MessageAPISettings,
+    get_message_api_settings,
 )
-from core.settings.user_service_settings import UserSettings, get_user_services_settings
-from services.user import AuthUserService, BaseUserService, DebugUserService
 
 
 class AppSettings(BaseSettings):
-
     host: str = Field("0.0.0.0", env="HOST")
     port: int = Field(8000, env="PORT")
     is_debug: bool = Field(False, env="DEBUG")
@@ -23,8 +20,7 @@ class AppSettings(BaseSettings):
 class Settings(BaseSettings):
     app = AppSettings()
     delivery_settings: DeliverySettings = get_delivery_settings()
-    user_services_settings: UserSettings = get_user_services_settings()
-    template_services_settings: TemplateServiceSettings = get_template_settings()
+    message_api_settings: MessageAPISettings = get_message_api_settings()
 
 
 @lru_cache

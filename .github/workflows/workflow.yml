@@ -23,10 +23,10 @@ jobs:
 
     - name: isort
       run: 
-        isort --check notification_api
+        isort --check delivery_api
     
-    - name: mypy_notification_api
-      run: mypy --ignore-missing-imports notification_api 
+    - name: mypy_delivery_api
+      run: mypy --ignore-missing-imports delivery_api 
     
 
     - name: send custom message

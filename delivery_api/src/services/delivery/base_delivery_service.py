@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-from models.notification import Notification
+from models.message import Message
 
 
 class BaseDeliveryService(ABC):
     @abstractmethod
-    async def send_notification(self, *, notification: Notification) -> bool:
+    async def send_notification(self, *, message: Message) -> bool:
         raise NotImplemented

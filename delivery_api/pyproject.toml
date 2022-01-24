@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "notification_api"
+name = "delivery_api"
 version = "0.1.0"
 description = ""
 authors = ["dimk00z"]
@@ -7,12 +7,11 @@ authors = ["dimk00z"]
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.72.0"
-httpx = "^0.21.3"
 gunicorn = "^20.1.0"
 uvicorn = "^0.17.0"
 orjson = "^3.6.5"
-Jinja2 = "^3.0.3"
 aiosmtplib = "^1.1.6"
+aiohttp = "^3.8.1"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"
@@ -34,4 +33,4 @@ multi_line_output=3
 include_trailing_comma="True"
 force_grid_wrap=0
 use_parentheses="True"
-known_first_party="notification_api,core,db,routes,settings,services,testdata"
+known_first_party="delivery_api,core,db,routes,settings,services,testdata"

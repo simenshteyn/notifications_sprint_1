@@ -8,24 +8,18 @@ from fastapi.responses import ORJSONResponse
 from api.v1.notification_endpoints import notifications_router
 from core.logger import LOGGING
 from core.settings.core_settings import get_settings
-from dependencies import (
-    delivery_dependencies,
-    notification_dependecies,
-    template_dependencies,
-    user_storage_dependencies,
-)
+from dependencies import delivery_dependencies, message_api_dependecies
 from services.delivery import EmailDeliveryService
-from services.notification.notification_service import NotificationService
-from services.template.endpoint_template_service import EndpointTemplateService
+from services.message.base_message_service import BaseMessageService
+from services.message.endpoint_message_service import EndpointMessageAPIService
 
 app_settings = get_settings()
 
 event_loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
 
-logger = logging.getLogger("notification_api")
+logger = logging.getLogger("delivery_api")
 logger.setLevel(logging.INFO if not app_settings.app.is_debug else logging.DEBUG)
-# logger.setLevel(logging.DEBUG)
-
+logger.setLevel(logging.DEBUG)
 
 app = FastAPI(
     docs_url="/api/openapi",
@@ -39,16 +33,16 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup_event():
-    # подключение службы получения персональных данных согласно конфига
-    user_storage_dependencies.user_service = user_storage_dependencies.set_user_service(
-        service_name=app_settings.app.user_service_name,
-        services_settings=app_settings.user_services_settings,
+    # подключение службы получения собранных сообщений
+    message_api_dependecies.message_api_service = message_api_dependecies.set_message_api_service(
+        EndpointMessageAPIService,
+        settings=app_settings.message_api_settings,
     )
-    logger.debug(user_storage_dependencies.get_user_service())
+    logger.debug(message_api_dependecies.get_message_api_service())
 
     # подключение служб отправки уведомлений согласно конфига
     delivery_dependencies.delivery_services["email"] = EmailDeliveryService(
-        email_notification_settings=app_settings.delivery_settings.email_settings, event_loop=event_loop
+        email_delivery_settings=app_settings.delivery_settings.email_settings, event_loop=event_loop
     )
 
     # подгрузка службы для тестирования
@@ -57,18 +51,6 @@ async def startup_event():
 
         delivery_dependencies.delivery_services["debug"] = DebugDeliveryService()
     logger.debug(delivery_dependencies.delivery_services)
-
-    # подгрузка службы работы с шаблонами
-    template_dependencies.end_point_template_service = EndpointTemplateService(
-        endpoint_template_settings=app_settings.template_services_settings.endpoint_settings
-    )
-
-    logger.debug(template_dependencies.end_point_template_service)
-
-    notification_dependecies.notification_service = notification_dependecies.set_notification_service(
-        NotificationService, template_service=template_dependencies.end_point_template_service, logger=logger
-    )
-    logger.debug(notification_dependecies.notification_service)
 
 
 app.include_router(notifications_router, prefix="/api/v1", tags=["Notifications service"])

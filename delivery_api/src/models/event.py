@@ -18,6 +18,4 @@ class Event(BaseModel):
     event_id: UUID
     user_id: UUID
     delivery_type: DeliveryType
-    event_type: str | None
     template_id: str | None
-    subject: str | None

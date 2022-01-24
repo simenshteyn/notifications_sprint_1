@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: notification_api
+    container_name: delivery_api
     restart: always
     env_file:
       - src/.env
