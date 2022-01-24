@@ -1,5 +1,5 @@
-from tests.functional.utils.models import HTTPResponse, StatusMessage, \
-    TemplatesRead, TemplatesShort
+from tests.functional.utils.models import (HTTPResponse, StatusMessage,
+                                           TemplatesRead, TemplatesShort)
 
 
 async def extract_message(response: HTTPResponse) -> StatusMessage:

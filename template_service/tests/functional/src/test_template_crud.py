@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 import pytest
 
-from tests.functional.utils.extract import extract_template, extract_message, \
-    extract_templates
+from tests.functional.utils.extract import (extract_message, extract_template,
+                                            extract_templates)
 
 
 @pytest.mark.asyncio
