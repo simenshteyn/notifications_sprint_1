@@ -21,7 +21,7 @@ jobs:
     - name: black
       run: black --line-length 110 --target-version py310 --check .
 
-    - name: isort
+    - name: isort_delivery_api
       run: 
         isort --check delivery_api
     

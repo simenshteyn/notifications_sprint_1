@@ -30,6 +30,7 @@ class EndpointMessageAPIService(BaseMessageService):
         except aiohttp.client_exceptions.ClientError as ex:
             logger.exception(ex)
             return None
+
         user = User(**response_json["user"])
         return Message(
             user=user,

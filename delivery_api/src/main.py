@@ -19,7 +19,6 @@ event_loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
 
 logger = logging.getLogger("delivery_api")
 logger.setLevel(logging.INFO if not app_settings.app.is_debug else logging.DEBUG)
-logger.setLevel(logging.DEBUG)
 
 app = FastAPI(
     docs_url="/api/openapi",
@@ -33,7 +32,7 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup_event():
-    # подключение службы получения собранных сообщений
+    # подключение службы получения сообщений
     message_api_dependecies.message_api_service = message_api_dependecies.set_message_api_service(
         EndpointMessageAPIService,
         settings=app_settings.message_api_settings,
@@ -53,7 +52,7 @@ async def startup_event():
     logger.debug(delivery_dependencies.delivery_services)
 
 
-app.include_router(notifications_router, prefix="/api/v1", tags=["Notifications service"])
+app.include_router(notifications_router, prefix="/api/v1", tags=["Delivery service"])
 
 if __name__ == "__main__":
 
