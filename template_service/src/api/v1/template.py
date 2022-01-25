@@ -3,32 +3,31 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from models.template import (Templates, TemplatesCreate, TemplatesRead,
-                             TemplatesShort, TemplatesUpdate)
+from models.template import (
+    Templates,
+    TemplatesCreate,
+    TemplatesRead,
+    TemplatesShort,
+    TemplatesUpdate,
+)
 from services.template import TemplateService, get_template_service
 
 router = APIRouter()
 
 
-@router.get('/', response_model=list[TemplatesShort],
-            response_model_exclude_unset=True)
+@router.get("/", response_model=list[TemplatesShort], response_model_exclude_unset=True)
 async def get_templates(
-        limit: int = 50,
-        offset: int = 0,
-        template_service: TemplateService = Depends(get_template_service)
+    limit: int = 50, offset: int = 0, template_service: TemplateService = Depends(get_template_service)
 ) -> list[Templates]:
-    result = await template_service.get_template_list(limit=limit,
-                                                      offset=offset)
+    result = await template_service.get_template_list(limit=limit, offset=offset)
     if not result:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND)
     return result
 
 
-@router.get('/{template_id}',
-            response_model=TemplatesRead, response_model_exclude_unset=True)
+@router.get("/{template_id}", response_model=TemplatesRead, response_model_exclude_unset=True)
 async def get_template_by_id(
-        template_id: UUID,
-        template_service: TemplateService = Depends(get_template_service)
+    template_id: UUID, template_service: TemplateService = Depends(get_template_service)
 ) -> Templates:
     result = await template_service.get_template_by_id(template_id)
     if not result:
@@ -36,11 +35,9 @@ async def get_template_by_id(
     return result
 
 
-@router.post('/', response_model=TemplatesRead,
-             response_model_exclude_unset=True)
+@router.post("/", response_model=TemplatesRead, response_model_exclude_unset=True)
 async def add_template(
-        template: TemplatesCreate,
-        template_service: TemplateService = Depends(get_template_service)
+    template: TemplatesCreate, template_service: TemplateService = Depends(get_template_service)
 ) -> Templates:
     result = await template_service.add_template(
         name=template.name,
@@ -52,11 +49,9 @@ async def add_template(
     return result
 
 
-@router.patch('/', response_model=TemplatesRead,
-              response_model_exclude_unset=True)
+@router.patch("/", response_model=TemplatesRead, response_model_exclude_unset=True)
 async def edit_template(
-        template: TemplatesUpdate,
-        template_service: TemplateService = Depends(get_template_service)
+    template: TemplatesUpdate, template_service: TemplateService = Depends(get_template_service)
 ) -> Templates:
     result = await template_service.edit_template(
         template_id=template.id,
@@ -69,11 +64,9 @@ async def edit_template(
     return result
 
 
-@router.delete('/{template_id}',
-               response_model=TemplatesRead, response_model_exclude_unset=True)
+@router.delete("/{template_id}", response_model=TemplatesRead, response_model_exclude_unset=True)
 async def remove_template_id(
-        template_id: UUID,
-        template_service: TemplateService = Depends(get_template_service)
+    template_id: UUID, template_service: TemplateService = Depends(get_template_service)
 ) -> Templates:
     result = await template_service.remove_template_by_id(template_id)
     if not result:

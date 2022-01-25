@@ -9,9 +9,9 @@ db_host = config.POSTGRES_HOST
 db_user = config.POSTGRES_USER
 db_pass = config.POSTGRES_PASSWORD
 db_port = config.POSTGRES_PORT
-db_driver = 'postgresql'
+db_driver = "postgresql"
 
-db_url = f'{db_driver}://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
+db_url = f"{db_driver}://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
 
 engine: Engine = create_engine(db_url)
 
