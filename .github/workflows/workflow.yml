@@ -26,7 +26,7 @@ jobs:
         isort --check delivery_api    
     - name: isort_rabbit
       run: 
-        isort --check rabbit_consumer
+        isort --settings-path delivery_api/pyproject.toml --check rabbit_consumer
             
     - name: isort_template_service
       run: 
