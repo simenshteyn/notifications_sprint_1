@@ -7,9 +7,12 @@ from fastapi.responses import ORJSONResponse
 
 from api.v1 import message, template
 from core import config
-from core.logger import LOGGING
+from core.logger import LOGGING_CONFIG
 from db import redis
 from db.orm import create_db_and_tables
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title=config.PROJECT_NAME,
@@ -52,6 +55,6 @@ if __name__ == '__main__':
         'main:app',
         host='0.0.0.0',
         port=8888,
-        log_config=LOGGING,
+        log_config=LOGGING_CONFIG,
         log_level=logging.DEBUG,
     )
