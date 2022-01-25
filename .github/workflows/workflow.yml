@@ -23,7 +23,14 @@ jobs:
 
     - name: isort_delivery_api
       run: 
-        isort --check delivery_api
+        isort --check delivery_api    
+    - name: isort_rabbit
+      run: 
+        isort --check rabbit_consumer
+            
+    - name: isort_template_service
+      run: 
+        isort --check template_service
     
     - name: mypy_delivery_api
       run: mypy --ignore-missing-imports delivery_api 
