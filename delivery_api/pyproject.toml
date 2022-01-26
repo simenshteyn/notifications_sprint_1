@@ -33,4 +33,4 @@ multi_line_output=3
 include_trailing_comma="True"
 force_grid_wrap=0
 use_parentheses="True"
-known_first_party="delivery_api,core,db,routes,settings,services,testdata"
+known_first_party="delivery_api,core,db,models,modules,routes,settings,services,testdata"

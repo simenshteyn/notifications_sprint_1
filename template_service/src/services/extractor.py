@@ -11,14 +11,16 @@ class ExtractorService:
 
     async def get_user_data(self, user_id: UUID) -> User:
         fake = Faker()
-        result = User(user_id=user_id,
-                      user_name=fake.first_name(),
-                      user_last_name=fake.last_name(),
-                      email=fake.email(),
-                      phone_number=fake.phone_number(),
-                      telegram_user_name=fake.domain_word(),
-                      location=fake.city(),
-                      birthdate=fake.date_of_birth())
+        result = User(
+            user_id=user_id,
+            user_name=fake.first_name(),
+            user_last_name=fake.last_name(),
+            email=fake.email(),
+            phone_number=fake.phone_number(),
+            telegram_user_name=fake.domain_word(),
+            location=fake.city(),
+            birthdate=fake.date_of_birth(),
+        )
         return result
 
 
