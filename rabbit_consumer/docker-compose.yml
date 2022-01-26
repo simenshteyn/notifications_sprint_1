@@ -1,0 +1,29 @@
+version: "3"
+services:
+  rabbit_consumer:
+    build: .
+    env_file:
+      - ./src/.env
+    container_name: rabbit_consumer
+    restart: always
+    command: >
+      python main.py
+    ports:
+      - "5000:8000"
+    depends_on:
+      - rabbitmq
+    networks:
+      - notification_net
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    networks:
+      - notification_net
+
+networks:
+  notification_net:
+    driver: bridge

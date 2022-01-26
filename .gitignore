@@ -61,3 +61,5 @@ staticfiles/
 *.sqlite
 .DS_Store
 tmp/
+.python-version
+poetry.lock
