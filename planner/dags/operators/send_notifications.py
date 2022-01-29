@@ -16,7 +16,7 @@ class NotificationSender:
         )
         self.credentials = pika.PlainCredentials("guest", "guest")
         self.parameters = pika.ConnectionParameters("localhost", credentials=credentials)
-        self.connection = pika.BlockingConnection(parameters)
+        self.queue = Field("queue", env="QUEUE")
 
     def send_notifications(self):
         template_id: str = requests.get(self.template_endpoint)
@@ -28,3 +28,8 @@ class NotificationSender:
             events.append(
                 Event(event_id=event_id, user_id=user_id, delivery_type="email", template_id=template_id)
             )
+        connection = pika.BlockingConnection(self.parameters)
+        channel = connection.channel()
+        channel.queue_declare(queue=self.queue)
+        for event in events:
+            channel.basic_publish(exchange="", routing_key=self.queue, body=event.json())
