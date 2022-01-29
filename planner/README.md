@@ -18,7 +18,7 @@ docker-compose up
 ```
 
 `http://{ip-address}:8080/home` - веб-интерфейс airflow, user:bitnami
-```
+
 
 ### Описание работы
 
