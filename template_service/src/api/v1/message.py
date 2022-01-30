@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.params import Body
 
 from models.message import (
     MessageCreate,
@@ -16,7 +17,7 @@ router = APIRouter()
 
 @router.post("/user", response_model=MessageRead, response_model_exclude_unset=True)
 async def render_message_for_user(
-    message: MessageCreate,
+    message: MessageCreate = Body(..., description="UUID of user and UUID of template to generate message"),
     message_service: MessageService = Depends(get_message_service),
     extractor_service: ExtractorService = Depends(get_extractor_service),
 ) -> MessageRead:
@@ -33,7 +34,14 @@ async def render_message_for_user(
 
 @router.post("/custom", response_model=MessageCustom, response_model_exclude_unset=True)
 async def render_custom_message(
-    message: MessageCreateCustom, message_service: MessageService = Depends(get_message_service)
+    message: MessageCreateCustom = Body(
+        ...,
+        description="UUID of template and payload JSON with variables to insert into message",
+        example='{ "template_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",'
+        '"payload":'
+        ' {"first": "first_value", "second": "second value"}}',
+    ),
+    message_service: MessageService = Depends(get_message_service),
 ) -> MessageCustom:
     """Render custom message with date provided in payload dictionary."""
     result = await message_service.render_custom_message(

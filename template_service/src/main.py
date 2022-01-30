@@ -32,7 +32,7 @@ async def startup():
         encoding="utf-8",
         decode_response=True,
     )
-    create_db_and_tables()
+    await create_db_and_tables()
 
 
 @app.on_event("shutdown")
