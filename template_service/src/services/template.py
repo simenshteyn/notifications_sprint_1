@@ -2,67 +2,66 @@ from functools import lru_cache
 from uuid import UUID
 
 from fastapi import Depends
-from sqlalchemy.engine import Engine
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-from db.orm import get_engine
+from db.orm import get_session
 from models.template import Templates
 
 
 class TemplateService:
     """Class to interact with templates: create, edit, read raw, delete."""
 
-    def __init__(self, engine: Engine):
-        self.engine = engine
+    def __init__(self, session: AsyncSession):
+        self.session = session
 
-    async def get_template_list(self, limit: int, offset: int) -> list[Templates] | None:
+    async def get_template_list(self, limit: int, offset: int) -> list[
+                                                                      Templates] | None:
         """Get template list with limit and offset."""
-        with Session(self.engine) as session:
-            statement = select(Templates).offset(offset).limit(limit)
-            results = session.exec(statement)
-            templates = results.all()
-            return templates
+        statement = select(Templates).offset(offset).limit(limit)
+        results = await self.session.exec(statement)
+        templates = results.all()
+        return templates
 
     async def get_template_by_id(self, template_id: UUID) -> Templates | None:
         """Get template by ID"""
-        with Session(self.engine) as session:
-            template = session.get(Templates, template_id)
-            return template
+        template = await self.session.get(Templates, template_id)
+        return template
 
-    async def add_template(self, name: str, content: str, subject: str) -> Templates | None:
+    async def add_template(self, name: str, content: str,
+                           subject: str) -> Templates | None:
         """Add new template to storage with template name, content, subject."""
         template = Templates(name=name, content=content, subject=subject)
-        with Session(self.engine) as session:
-            session.add(template)
-            session.commit()
-            session.refresh(template)
+        self.session.add(template)
+        await self.session.commit()
+        await self.session.refresh(template)
         return template
 
     async def edit_template(
-        self, template_id: UUID, name: str, content: str, subject: str
+            self, template_id: UUID, name: str, content: str, subject: str
     ) -> Templates | None:
         """Update template by id with new name, content or subject."""
-        with Session(self.engine) as session:
-            template = session.get(Templates, template_id)
-            if template:
-                template.name = name
-                template.content = content
-                template.subject = subject
-                session.add(template)
-                session.commit()
-                session.refresh(template)
-            return template
+        template = await self.session.get(Templates, template_id)
+        if template:
+            template.name = name
+            template.content = content
+            template.subject = subject
+            self.session.add(template)
+            await self.session.commit()
+            await self.session.refresh(template)
+        return template
 
-    async def remove_template_by_id(self, template_id: UUID) -> Templates | None:
+    async def remove_template_by_id(self,
+                                    template_id: UUID) -> Templates | None:
         """Remove template by ID"""
-        with Session(self.engine) as session:
-            template = session.get(Templates, template_id)
-            if template:
-                session.delete(template)
-                session.commit()
-            return template
+        template = await self.session.get(Templates, template_id)
+        if template:
+            await self.session.delete(template)
+            await self.session.commit()
+        return template
 
 
 @lru_cache()
-def get_template_service(engine: Engine = Depends(get_engine)) -> TemplateService:
-    return TemplateService(engine)
+def get_template_service(
+        session: AsyncSession = Depends(get_session)) -> TemplateService:
+    return TemplateService(session)

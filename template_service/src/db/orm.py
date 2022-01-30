@@ -1,8 +1,9 @@
 from sqlalchemy.engine import Engine
-from sqlmodel import SQLModel, create_engine
-
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlmodel import SQLModel
+from sqlmodel.ext.asyncio.session import AsyncSession
+
 from core import config
 from models.template import Templates  # needed for SQLModel engine
 
@@ -29,7 +30,3 @@ async def get_session() -> AsyncSession:
     )
     async with async_session() as session:
         yield session
-
-
-async def get_engine() -> Engine:
-    return engine
