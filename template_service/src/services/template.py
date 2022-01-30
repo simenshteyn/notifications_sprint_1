@@ -15,8 +15,7 @@ class TemplateService:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def get_template_list(self, limit: int, offset: int) -> list[
-                                                                      Templates] | None:
+    async def get_template_list(self, limit: int, offset: int) -> list[Templates] | None:
         """Get template list with limit and offset."""
         statement = select(Templates).offset(offset).limit(limit)
         results = await self.session.exec(statement)
@@ -28,8 +27,7 @@ class TemplateService:
         template = await self.session.get(Templates, template_id)
         return template
 
-    async def add_template(self, name: str, content: str,
-                           subject: str) -> Templates | None:
+    async def add_template(self, name: str, content: str, subject: str) -> Templates | None:
         """Add new template to storage with template name, content, subject."""
         template = Templates(name=name, content=content, subject=subject)
         self.session.add(template)
@@ -38,7 +36,7 @@ class TemplateService:
         return template
 
     async def edit_template(
-            self, template_id: UUID, name: str, content: str, subject: str
+        self, template_id: UUID, name: str, content: str, subject: str
     ) -> Templates | None:
         """Update template by id with new name, content or subject."""
         template = await self.session.get(Templates, template_id)
@@ -51,8 +49,7 @@ class TemplateService:
             await self.session.refresh(template)
         return template
 
-    async def remove_template_by_id(self,
-                                    template_id: UUID) -> Templates | None:
+    async def remove_template_by_id(self, template_id: UUID) -> Templates | None:
         """Remove template by ID"""
         template = await self.session.get(Templates, template_id)
         if template:
@@ -62,6 +59,5 @@ class TemplateService:
 
 
 @lru_cache()
-def get_template_service(
-        session: AsyncSession = Depends(get_session)) -> TemplateService:
+def get_template_service(session: AsyncSession = Depends(get_session)) -> TemplateService:
     return TemplateService(session)

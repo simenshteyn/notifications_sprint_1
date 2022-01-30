@@ -22,10 +22,10 @@ class MessageService:
         self.session = session
 
     async def render_message_for_user(
-            self,
-            template_id: UUID,
-            user_id: UUID,
-            extractor: ExtractorService,
+        self,
+        template_id: UUID,
+        user_id: UUID,
+        extractor: ExtractorService,
     ) -> MessageRead | None:
         """Render message for user with template."""
         user: User = await extractor.get_user_data(user_id=user_id)
@@ -38,14 +38,12 @@ class MessageService:
             subject = Template(subject).substitute(user.dict())
         try:
             msg = text.substitute(user.dict())
-            return MessageRead(template_id=template_id, user=user,
-                               subject=subject, message=msg)
+            return MessageRead(template_id=template_id, user=user, subject=subject, message=msg)
         except Exception as e:
             logger.debug(f"{e}")
             return None
 
-    async def render_custom_message(self, template_id: UUID,
-                                    payload: dict) -> MessageCustom | None:
+    async def render_custom_message(self, template_id: UUID, payload: dict) -> MessageCustom | None:
         """Render custom message with provided data in payload."""
         template = await self.session.get(Templates, template_id)
         if template is None:
@@ -53,14 +51,12 @@ class MessageService:
         text = Template(template.content)
         try:
             msg = text.substitute(payload)
-            return MessageCustom(template_id=template_id, payload=payload,
-                                 message=msg)
+            return MessageCustom(template_id=template_id, payload=payload, message=msg)
         except Exception as e:
             logger.debug(f"{e}")
             return None
 
 
 @lru_cache()
-def get_message_service(
-        session: AsyncSession = Depends(get_session)) -> MessageService:
+def get_message_service(session: AsyncSession = Depends(get_session)) -> MessageService:
     return MessageService(session)
