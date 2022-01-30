@@ -8,8 +8,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from db.orm import get_session
 from models.message import MessageCustom, MessageRead
-from models.template import Templates
 from models.user import User
+from schema.template import Templates
 from services.extractor import ExtractorService
 
 logger = logging.getLogger(__name__)

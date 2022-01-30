@@ -6,7 +6,7 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from db.orm import get_session
-from models.template import Templates
+from schema.template import Templates
 
 
 class TemplateService:

@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from models.template import (
+from schema.template import (
     Templates,
     TemplatesCreate,
     TemplatesRead,

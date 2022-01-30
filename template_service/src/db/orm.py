@@ -5,7 +5,7 @@ from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from core import config
-from models.template import Templates  # needed for SQLModel engine
+from schema.template import Templates  # needed for SQLModel engine
 
 db_name = config.POSTGRES_DB
 db_host = config.POSTGRES_HOST
